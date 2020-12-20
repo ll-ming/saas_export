@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--目标：spring整合MyBaties框架-->
+
+    <!--1.加载properties文件-->
+    <context:property-placeholder location="classpath:/properties/db.properties"></context:property-placeholder>
+
+    <!--2.创建连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+    <!--3.-创建SqlSessionFactoryBean对象-->
+    <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--从连接池从获取连接-->
+        <property name="dataSource" ref="dataSource"></property>
+        <!--给实体类取别名,扫描实体类的整个包-->
+        <property name="typeAliasesPackage" value="com.luming.domain"></property>
+
+    </bean>
+
+
+    <!--4.扫描接口映射文件-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--扫描dao包中的所有映射文件-->
+        <property name="basePackage" value="com.luming.dao"></property>
+    </bean>
+
+
+</beans>
